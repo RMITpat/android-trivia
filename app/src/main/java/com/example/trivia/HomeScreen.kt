@@ -52,9 +52,12 @@ fun BottomBar(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        OutlinedButton (onClick = {}) {
+        OutlinedButton (
+            onClick = {}
+        ) {
             Text("Play",
-                style = MaterialTheme.typography.displaySmall)
+                style = MaterialTheme.typography.displaySmall
+            )
         }
     }
 }
