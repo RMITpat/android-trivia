@@ -11,8 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.trivia.quiz.PlayScreen
 import com.example.trivia.ui.theme.TriviaTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,10 +35,27 @@ fun TriviaApp() {
     TriviaTheme {
         val navController = rememberNavController()
         NavHost(
-            navController = navController
+            navController = navController,
+            startDestination = Home.route
         ) {
+            composable(route = Home.route)  {
+                HomeScreen(
+                    onPlayClick = { navController.navigateSingleTopTo(Play.route) }
+                )
+            }
+            composable(route = Play.route) {
+                PlayScreen()
+            }
 
         }
-        HomeScreen()
     }
 }
+
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) {
+        popUpTo(
+            this@navigateSingleTopTo.graph.findStartDestination().id
+        )
+        launchSingleTop = true
+    }

@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +22,7 @@ import com.example.trivia.ui.theme.TriviaTheme
 
 @Composable
 fun HomeScreen(
+    onPlayClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -26,13 +30,13 @@ fun HomeScreen(
         modifier = modifier
     ) {
         Scaffold(
-            topBar = {
-                Topbar(modifier = Modifier.padding(8.dp))
-            },
+            topBar = { Topbar() },
+
             bottomBar = {
-                BottomBar(modifier = Modifier
+                BottomBar(
+                    onClick = onPlayClick,
+                    modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
                 )
             }
         ) { padding ->
@@ -46,30 +50,39 @@ fun HomeScreen(
 
 @Composable
 fun BottomBar(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
+    BottomAppBar(
         modifier = modifier
     ) {
-        OutlinedButton (
-            onClick = {}
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Play",
-                style = MaterialTheme.typography.displaySmall
-            )
+            OutlinedButton(
+                onClick = { onClick() }
+            ) {
+                Text(
+                    "Play",
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
         }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Topbar(
     modifier: Modifier = Modifier
 ) {
-
-    Text(
-        text = "Trivia!",
-        style = MaterialTheme.typography.displayMedium,
-        modifier = modifier
+    TopAppBar(title = {
+        Text(
+            text = "Trivia!",
+            style = MaterialTheme.typography.displayMedium,
+            modifier = modifier
+        )
+    }
     )
 }
 
@@ -77,6 +90,8 @@ fun Topbar(
 @Composable
 fun GreetingPreview() {
     TriviaTheme {
-        HomeScreen()
+        HomeScreen(
+            onPlayClick = {},
+        )
     }
 }
