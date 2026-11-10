@@ -1,13 +1,27 @@
 package com.example.trivia.network
 
-data class Question (
-    val question: String,
-    val category: String,
-    val difficulty: String,
-    val correctAnswer: String,
-    val incorrectAnswers: List<String>
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+
+
+@Serializable
+data class TriviaResponse(
+    @SerialName("response_code") val responseCode: Int,
+    val results: List<Question>
 )
 
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable
+@JsonIgnoreUnknownKeys
+data class Question(
+    val category: String,
+    val question: String,
+    val difficulty: String,
+    @SerialName("correct_answer") val correctAnswer: String,
+    @SerialName("incorrect_answers") val incorrectAnswers: List<String>
+)
 //{
 //    "type": "multiple",
 //    "difficulty": "medium",

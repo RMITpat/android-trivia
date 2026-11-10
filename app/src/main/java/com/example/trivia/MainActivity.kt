@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TriviaApp()
-            val vm = hiltViewModel<QuizViewModel>()
         }
     }
 }
