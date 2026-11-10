@@ -19,7 +19,10 @@ import javax.inject.Inject
 sealed interface QuestionsState {
     object Error : QuestionsState
     object Loading : QuestionsState
-    data class Success(val questions: List<Question>) : QuestionsState
+    data class Success(
+        val questions: List<Question>,
+        val currentIndex: Int = 0
+        ) : QuestionsState
 }
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -28,25 +31,28 @@ class QuizViewModel @Inject constructor(
 
     private var _questionsState = MutableStateFlow<QuestionsState>(QuestionsState.Loading)
     val questionState: StateFlow<QuestionsState> = _questionsState.asStateFlow()
-//
-//    private var _currentQuestion = MutableStateFlow<Question>()
-//    val currentQuestion: State<Question> = _currentQuestion.asStateFlow()
-//
+
+
     init {
         viewModelScope.launch {
-            Log.d("opentdb", "Starting question request")
             _questionsState.value = try {
                 QuestionsState.Success(questionRepository.getQuestions())
+
             } catch (e: Exception){
+
                 Log.d("opentdb", e.toString())
+
                 QuestionsState.Error
             }
         }
     }
 
-//    fun getNextQuestion(): Question {
-//
-//    }
+    fun getNextQuestion(questions: List<Question>) {
+        val state = _questionsState.value as? QuestionsState.Success ?: return
+        if (state.currentIndex + 1 < state.questions.size) {
+            _questionsState.value = state.copy(currentIndex = state.currentIndex + 1)
+        }
+    }
 
 
 
