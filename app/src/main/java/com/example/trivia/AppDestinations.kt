@@ -8,18 +8,18 @@ import androidx.navigation.navArgument
 /**
  * Contract for information needed on every navigation destination
  */
-interface RallyDestination {
+interface Destination {
     val route: String
 }
 
 /**
  * App navigation destinations
  */
-object Home : RallyDestination {
+object Home : Destination {
     override val route = "home"
 }
 
-object Play : RallyDestination {
+object Play : Destination {
     override val route = "play"
 }
 
