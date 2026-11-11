@@ -43,7 +43,9 @@ fun TriviaApp() {
                 )
             }
             composable(route = Play.route) {
-                PlayScreen()
+                PlayScreen(
+                    goBackClick = { navController.popBackStack() },
+                )
             }
 
         }

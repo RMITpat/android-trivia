@@ -1,0 +1,30 @@
+package com.example.trivia.ui.quiz
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
+@Composable
+fun ErrorDisplay(
+    goBackClick: () -> Unit,
+    retryClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column (
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Failed to start quiz :(")
+        Button(onClick = { retryClick() }) {
+            Text("Retry")
+        }
+        Button(onClick = { goBackClick() }) {
+            Text("Go Back")
+        }
+    }
+}
