@@ -38,43 +38,49 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Black,
-        fontSize = 48.sp,
-        lineHeight = 54.sp
+        fontSize = 42.sp,
+        lineHeight = 48.sp
     ),
     displayMedium = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Black,
-        fontSize = 36.sp,
-        lineHeight = 42.sp
+        fontSize = 30.sp,
+        lineHeight = 46.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = GameFont,
+        fontWeight = FontWeight.Black,
+        fontSize = 21.sp,
+        lineHeight = 39.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 26.sp,
-        lineHeight = 32.sp
+        fontSize = 20.sp,
+        lineHeight = 26.sp
     ),
     titleLarge = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp
+        fontSize = 16.sp,
+        lineHeight = 22.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Black,
-        fontSize = 40.sp,
-        lineHeight = 45.sp
+        fontSize = 34.sp,
+        lineHeight = 39.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 25.sp,
+        fontSize = 19.sp,
         lineHeight = 26.sp
     ),
     labelLarge = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        lineHeight = 22.sp
+        fontSize = 10.sp,
+        lineHeight = 16.sp
     )
 )

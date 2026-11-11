@@ -17,7 +17,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.trivia.R
 import com.example.trivia.ui.theme.TriviaTheme
 
 @Composable
@@ -69,7 +71,7 @@ fun BottomBar(
                 )
             ) {
                 Text(
-                    "Play",
+                    stringResource(R.string.play),
                     style = MaterialTheme.typography.displayMedium
                 )
             }
@@ -85,7 +87,7 @@ fun Topbar(
     TopAppBar(
         title = {
             Text(
-                text = "Trivia!",
+                text = stringResource(R.string.trivia),
                 style = MaterialTheme.typography.displayLarge,
                 modifier = modifier,
 

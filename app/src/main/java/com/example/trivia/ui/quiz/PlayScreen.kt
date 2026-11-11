@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -64,14 +66,14 @@ fun PlayScreen(
 
     when (val state = questionState) {
         is QuestionsState.Error -> ErrorDisplay(
-            goBackClick = { goBackClick() },
-            retryClick = { viewModel.fetchQuestions() },
+            goBackClick =  goBackClick,
+            retryClick = viewModel::fetchQuestions,
             modifier = modifier.fillMaxSize()
         )
         is QuestionsState.Loading -> LoadingDisplay(
             modifier = modifier.fillMaxSize()
         )
-        is QuestionsState.Success -> QuestionDisplay(
+        is QuestionsState.Playing -> QuestionDisplay(
             modifier = modifier,
             question = state.questions[state.currentIndex],
             questionIndex = state.currentIndex,
@@ -84,6 +86,13 @@ fun PlayScreen(
             nextQuestion = viewModel::nextQuestion,
             goBackClick = goBackClick
 
+        )
+        is QuestionsState.Finished -> FinishedDisplay(
+            modifier = modifier.fillMaxSize(),
+            message = state.message,
+            score = state.score,
+            questionCount = state.questionCount,
+            goBackClick = goBackClick
         )
     }
 
@@ -157,19 +166,23 @@ fun QuestionDisplay(
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(15.dp),
-                    maxLines = 4,
+                    maxLines = 3,
                     autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 40.sp)
 
                 )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(bottom = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp)
             ) {
                 // Answers
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        ,
                 ) {
                     items(
                         items = question.allAnswers,
@@ -196,7 +209,9 @@ fun QuestionDisplay(
                         onClick = nextQuestion
                     ) {
                         Text(
-                            stringResource(R.string.next_question),
+                            if (questionIndex < questionCount - 1) stringResource(R.string.next_question) else stringResource(
+                                R.string.finish
+                            ),
                             style = MaterialTheme.typography.titleLarge
                         )
 
@@ -224,9 +239,9 @@ fun AnswerBox(
             answerCorrect = answer == question.correctAnswer
              ),
         animationSpec = tween(
-            durationMillis = 1000, // 1 second duration
-            delayMillis = 100,     // Wait 100ms before starting
-            easing = LinearOutSlowInEasing // Smooth slowdown at the end
+            durationMillis = 1000,
+            delayMillis = 100,
+            easing = LinearOutSlowInEasing
         ),
     )
     Surface(
@@ -234,7 +249,7 @@ fun AnswerBox(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             //.heightIn(min = 150.dp)
-            .size(200.dp)
+            .size(190.dp)
             .padding(10.dp),
         border = if (selectedAnswer == answer)
             BorderStroke(6.dp,
@@ -310,7 +325,9 @@ fun QuestionTopBar(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(end = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp)
             ) {
                 Text(
                     text = "Question ${questionIndex + 1} of $questionCount",
@@ -342,13 +359,13 @@ fun QuestionPreview() {
                 correctAnswer = "Me",
                 incorrectAnswers = listOf("Tommy", "Solash", "Noah Bloomfielddwdjwaojdwaioajwiowjaioddijowajiowadijodwaijowadiowajiodwa")
             ),
-            questionIndex = 0,
+            questionIndex = 9,
             questionCount = 10,
             modifier = Modifier,
             selectAnswer = {},
             selectedAnswer = "Tommy",
             submitAnswer = {},
-            questionEnabled = true,
+            questionEnabled = false,
             questionTimer = 0.7f,
             nextQuestion = {},
             goBackClick = {}

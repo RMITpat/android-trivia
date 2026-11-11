@@ -2,4 +2,7 @@
     <string name="app_name">Trivia</string>
     <string name="lock_it_in_eddy">LOCK IT IN EDDY</string>
     <string name="next_question">Next Question</string>
+    <string name="play">Play</string>
+    <string name="trivia">Trivia!</string>
+    <string name="finish">Finish</string>
 </resources>

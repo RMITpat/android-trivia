@@ -1,8 +1,6 @@
 package com.example.trivia.ui.quiz
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.trivia.data.QuestionRepository
@@ -14,8 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.connection.Exchange
-import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -24,10 +20,16 @@ import kotlin.time.Duration.Companion.seconds
 sealed interface QuestionsState {
     object Error : QuestionsState
     object Loading : QuestionsState
-    data class Success(
+    data class Playing(
         val questions: List<Question>,
         val currentIndex: Int = 0
         ) : QuestionsState
+
+    data class Finished(
+        val message: String,
+        val score: Int,
+        val questionCount: Int
+    ) : QuestionsState
 }
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -50,7 +52,7 @@ class QuizViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                _questionsState.value = QuestionsState.Success(questionRepository.getQuestions())
+                _questionsState.value = QuestionsState.Playing(questionRepository.getQuestions())
                 startQuestionTimer()
 
             } catch (e: HttpException) {
@@ -77,15 +79,16 @@ class QuizViewModel @Inject constructor(
 
     // The current timer value for a question
     private var _questionTimer = MutableStateFlow(0f)
-    val questionTimer: StateFlow<Float> = _questionTimer
+    val questionTimer: StateFlow<Float> = _questionTimer.asStateFlow()
 
     // Whether the answer buttons are enabled
     private var _questionEnabled = MutableStateFlow(true)
-    val questionEnabled: StateFlow<Boolean> = _questionEnabled
+    val questionEnabled: StateFlow<Boolean> = _questionEnabled.asStateFlow()
 
     // The current ongoing timer, stored for early cancellation
     private var currentTimer: Job? = null
-    
+
+    private var score: Int = 0
     /**
     Select an answer
      */
@@ -98,11 +101,37 @@ class QuizViewModel @Inject constructor(
      */
     fun nextQuestion() {
 
-        val state = _questionsState.value as? QuestionsState.Success ?: return
+        val state = _questionsState.value as? QuestionsState.Playing ?: return
+
+        if (_selectedAnswer.value == state.questions[state.currentIndex].correctAnswer) {
+            score++
+        }
         if (state.currentIndex + 1 < state.questions.size) {
             _questionsState.value = state.copy(currentIndex = state.currentIndex + 1)
+        } else {
+            _questionsState.value = QuestionsState.Finished(
+                message = scoreMessage(score, state.questions.size),
+                score = score,
+                questionCount = state.questions.size
+            )
         }
+
+        _selectedAnswer.value = ""
         startQuestionTimer()
+    }
+
+    private fun scoreMessage(score: Int, questionCount: Int): String {
+        val percentage: Float = score.toFloat() / questionCount
+
+        if (percentage < 0.3f) {
+            return "That is pathetic and you should give up"
+        } else if (percentage < 0.6f) {
+            return "Holy that is a shit score. Delete me from your phone please "
+        } else if (percentage < 0.9f) {
+            return "Better hope your privacy screen is on"
+        } else {
+            return "Goat. Apply to jane street immediately"
+        }
     }
 
     /**
@@ -145,7 +174,7 @@ class QuizViewModel @Inject constructor(
                 _questionTimer.value = i / 200f
             }
 
-            disableQuestion()
+            submitAnswer()
         }
 
 
