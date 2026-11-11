@@ -21,7 +21,11 @@ data class Question(
     val difficulty: String,
     @SerialName("correct_answer") val correctAnswer: String,
     @SerialName("incorrect_answers") val incorrectAnswers: List<String>
-)
+
+) {
+    val allAnswers: List<String>
+        get() = (incorrectAnswers + correctAnswer).shuffled()
+}
 //{
 //    "type": "multiple",
 //    "difficulty": "medium",

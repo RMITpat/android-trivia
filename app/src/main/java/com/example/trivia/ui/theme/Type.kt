@@ -35,26 +35,17 @@ val GameFont = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 }
 
 val Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = GameFont,
+        fontWeight = FontWeight.Black,
+        fontSize = 48.sp,
+        lineHeight = 54.sp
+    ),
     displayMedium = TextStyle(
         fontFamily = GameFont,
         fontWeight = FontWeight.Black,
-        fontSize = 40.sp
-    ),
-    displayLarge = TextStyle(
-        fontFamily = GameFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 60.sp
-    ),
-
-    bodyLarge = TextStyle(
-        fontFamily = GameFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = GameFont,
-        fontWeight = FontWeight.Black,
-        fontSize = 16.sp
+        fontSize = 36.sp,
+        lineHeight = 42.sp
     ),
     headlineSmall = TextStyle(
         fontFamily = GameFont,
@@ -68,5 +59,22 @@ val Typography = Typography(
         fontSize = 22.sp,
         lineHeight = 28.sp
     ),
-
+    bodyLarge = TextStyle(
+        fontFamily = GameFont,
+        fontWeight = FontWeight.Black,
+        fontSize = 40.sp,
+        lineHeight = 45.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = GameFont,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 25.sp,
+        lineHeight = 26.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = GameFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 22.sp
+    )
 )

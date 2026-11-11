@@ -1,22 +1,42 @@
 package com.example.trivia.ui.quiz
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.trivia.network.Question
@@ -63,29 +83,91 @@ fun QuestionDisplay(
             )
         }
     ) { paddingValues ->
+        
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(paddingValues)
+                .fillMaxHeight()
 
         ) {
-            Text(
-                text = question.category,
-                style = MaterialTheme.typography.displaySmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(10.dp)
-            )
-            Text(
-                text = question.question,
-                style = MaterialTheme.typography.displayMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(10.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 10.dp)
+            ) {
+                // Category
+                Surface(
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        text = question.category,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
 
-            )
+                // Question
+                Text(
+                    text = question.question,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(15.dp)
+                )
+            }
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(bottom = 10.dp)
+            ) {
+                // Answers
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier,
+                ) {
+                    items(
+                        items = question.allAnswers,
+                    ) { item ->
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondary,
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier
+                                //.heightIn(min = 150.dp)
+                                .size(200.dp)
+                                .padding(10.dp)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = item,
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 28.sp)
+                                )
+                            }
+                        }
+                    }
+
+                }
+
+                // Submit
+                ElevatedButton(
+                    onClick = {}
+                ) {
+                    Text("LOCK IT IN EDDY",
+                        style = MaterialTheme.typography.titleLarge)
+                }
+            }
+
+
 
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,7 +199,7 @@ fun QuestionPreview() {
                 question = "Who is going to Google",
                 difficulty = "Hard",
                 correctAnswer = "Me",
-                incorrectAnswers = listOf("Tommy", "Solash", "My mum", "Noah Bloomfield")
+                incorrectAnswers = listOf("Tommy", "Solash", "Noah Bloomfielddwdjwaojdwaioajwiowjaioddijowajiowadijodwaijowadiowajiodwa")
             ),
             questionIndex = 0,
             questionCount = 10,
