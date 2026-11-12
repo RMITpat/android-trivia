@@ -23,7 +23,7 @@ data class Question(
     @SerialName("incorrect_answers") val incorrectAnswers: List<String>
 
 ) {
-    val allAnswers: List<String> = (incorrectAnswers + correctAnswer).shuffled()
+    val allAnswers: List<List<String>> = (incorrectAnswers + correctAnswer).shuffled().chunked(2)
 }
 //{
 //    "type": "multiple",

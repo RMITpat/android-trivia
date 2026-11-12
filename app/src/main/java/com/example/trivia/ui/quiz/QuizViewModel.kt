@@ -48,8 +48,6 @@ class QuizViewModel @Inject constructor(
        Fetch questions from OpenTDB
      */
     fun fetchQuestions() {
-        _questionsState.value = QuestionsState.Loading
-
         viewModelScope.launch {
             try {
                 _questionsState.value = QuestionsState.Playing(questionRepository.getQuestions())

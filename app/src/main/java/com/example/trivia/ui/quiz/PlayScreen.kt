@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -137,6 +139,8 @@ fun QuestionDisplay(
         ) {
 
             Column(
+                modifier = Modifier
+                    .weight(3f),
                 horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
@@ -147,15 +151,18 @@ fun QuestionDisplay(
                 Surface(
                     color = MaterialTheme.colorScheme.tertiary,
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp )
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp )
                 ) {
                     Text(
                         text = question.category,
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(10.dp),
-                        maxLines = 2,
-                        autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 26.sp)
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .weight(1f),
+                        maxLines = 1,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 20.sp)
 
                     )
                 }
@@ -165,58 +172,87 @@ fun QuestionDisplay(
                     text = question.question,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(15.dp),
-                    maxLines = 3,
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .weight(4f)
+                    ,
+                    maxLines = 4,
                     autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 40.sp)
 
                 )
             }
+            Spacer(modifier = Modifier.weight(0.7f))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(bottom = 10.dp)
+                    .weight(5f)
+
             ) {
                 // Answers
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                Column(
+                    modifier = Modifier.padding(10.dp)
+                        .weight(7f)
+                    ,
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(
-                        items = question.allAnswers,
-                    ) { answer ->
-                        AnswerBox(
-                            answer, questionEnabled, question, selectedAnswer, selectAnswer
-                        )
+                    question.allAnswers.forEach { answers ->
+                        Row(
+                            modifier = Modifier.weight(1f/question.allAnswers.size),
+                            horizontalArrangement = Arrangement.spacedBy(15.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            answers.forEach { answer ->
+                                AnswerBox(
+                                    answer,
+                                    questionEnabled,
+                                    question,
+                                    selectedAnswer,
+                                    selectAnswer,
+                                    Modifier
+                                        .weight(1f, )
+                                        .fillMaxSize()
+                                )
+                            }
+                        }
+
                     }
 
                 }
-                if (questionEnabled) {
-                    // Submit
-                    ElevatedButton(
-                        onClick = submitAnswer,
-                        enabled = selectedAnswer.isNotEmpty()
-                    ) {
-                        Text(
-                            stringResource(R.string.lock_it_in_eddy),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                } else {
-                    Button(
-                        onClick = nextQuestion
-                    ) {
-                        Text(
-                            if (questionIndex < questionCount - 1) stringResource(R.string.next_question) else stringResource(
-                                R.string.finish
-                            ),
-                            style = MaterialTheme.typography.titleLarge
-                        )
+                Box(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    if (questionEnabled) {
+                        // Submit
+                        ElevatedButton(
+                            onClick = submitAnswer,
+                            enabled = selectedAnswer.isNotEmpty()
+                        ) {
+                            Text(
+                                stringResource(R.string.lock_it_in_eddy),
+                                style = MaterialTheme.typography.titleLarge,
+                                autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 16.sp)
 
+                            )
+                        }
+                    } else {
+                        Button(
+                            onClick = nextQuestion
+                        ) {
+                            Text(
+                                if (questionIndex < questionCount - 1) stringResource(R.string.next_question) else stringResource(
+                                    R.string.finish
+                                ),
+                                style = MaterialTheme.typography.titleLarge,
+                                autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 16.sp)
+
+                            )
+
+                        }
                     }
                 }
+
             }
 
 
@@ -231,7 +267,8 @@ fun AnswerBox(
     questionEnabled: Boolean,
     question: Question,
     selectedAnswer: String,
-    selectAnswer: (String) -> Unit
+    selectAnswer: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val answerColor by animateColorAsState(
         answerColor(
@@ -247,10 +284,8 @@ fun AnswerBox(
     Surface(
         color = answerColor,
         shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            //.heightIn(min = 150.dp)
-            .size(190.dp)
-            .padding(10.dp),
+        modifier = modifier
+        ,
         border = if (selectedAnswer == answer)
             BorderStroke(6.dp,
                 Color.Black
@@ -271,7 +306,7 @@ fun AnswerBox(
                 text = answer,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
-                autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 28.sp)
+                autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 24.sp)
             )
         }
     }
@@ -354,18 +389,18 @@ fun QuestionPreview() {
         QuestionDisplay(
             question = Question(
                 category = "The best ijjiij",
-                question = "Who is going to Google",
+                question = "Who is going to Googlfrkfrmkfrmkfrkmfrkfmrkmrfkrmfkmfrfkmrmkrfkrfkrfe",
                 difficulty = "Hard",
                 correctAnswer = "Me",
                 incorrectAnswers = listOf("Tommy", "Solash", "Noah Bloomfielddwdjwaojdwaioajwiowjaioddijowajiowadijodwaijowadiowajiodwa")
             ),
-            questionIndex = 9,
+            questionIndex = 2,
             questionCount = 10,
             modifier = Modifier,
             selectAnswer = {},
             selectedAnswer = "Tommy",
             submitAnswer = {},
-            questionEnabled = false,
+            questionEnabled = true,
             questionTimer = 0.7f,
             nextQuestion = {},
             goBackClick = {}
